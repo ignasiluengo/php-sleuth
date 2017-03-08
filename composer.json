@@ -1,0 +1,30 @@
+{
+  "name": "php-sleuth",
+  "description": "php port of spring-cloud-sleuth",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ignasi Luengo",
+      "email": "ignasi.luengo@gmail.com"
+    }
+  ],
+  "require": {
+    "php" : "^7.0",
+    "ramsey/uuid": "^3.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.*",
+    "mockery/mockery": "^0.9.9"
+  },
+  "autoload": {
+    "psr-4": { "": "src/" }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sleuth\\Core\\Test\\": "tests"
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}
