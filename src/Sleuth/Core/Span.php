@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 namespace Sleuth\Core;
 
 use Ramsey\Uuid\Uuid;
@@ -38,6 +35,7 @@ class Span implements SpanContext
     const CLIENT_SEND = 'cs';
     const CLIENT_RECV = 'cr';
     const SERVER_SEND = 'ss';
+    const SERVER_RECV = "sr";
     const SPAN_PEER_SERVICE_TAG_NAME = 'peer.service';
     const INSTANCEID = 'sleuth.instance_id';
 
@@ -133,27 +131,27 @@ class Span implements SpanContext
         $span = new self();
 
         if ($builder->getBegin() > 0) {
-            $this->begin = $builder->getBegin();
+            $span->begin = $builder->getBegin();
         } else {
-            $this->begin = microtime(true);
+            $span->begin = microtime(true);
         }
 
         if ($builder->getEnd() > 0) {
-            $this->end = $builder->getEnd();
-            $this->durationMicros = ($this->end - $this->begin);
+            $span->end = $builder->getEnd();
+            $span->durationMicros = ($this->end - $this->begin);
         }
 
-        $this->name = (strlen($builder->getName())) ? $builder->getName() : '';
-        $this->traceId = $builder->getTraceId();
-        $this->parents = $builder->getParents();
+        $span->name = (strlen($builder->getName())) ? $builder->getName() : '';
+        $span->traceId = $builder->getTraceId();
+        $span->parents = $builder->getParents();
 
-        $this->remote = $builder->getRemote();
-        $this->exportable = $builder->getExportable();
-        $this->processId = $builder->getProcessId();
-        $this->savedSpan = $builder->getSavedSpan();
-        $this->tags = $builder->getTags();
-        $this->logs = $builder->getLogs();
-        $this->baggage = $builder->getBaggage();
+        $span->remote = $builder->getRemote();
+        $span->exportable = $builder->isExportable();
+        $span->processId = $builder->getProcessId();
+        $span->savedSpan = $builder->getSavedSpan();
+        $span->tags = $builder->getTags();
+        $span->logs = $builder->getLogs();
+        $span->baggage = $builder->getBaggage();
 
         return $span;
     }
@@ -213,6 +211,14 @@ class Span implements SpanContext
     }
 
     /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return array
      */
     public function getTags() : array
@@ -249,7 +255,10 @@ class Span implements SpanContext
         return $this->traceId;
     }
 
-    public function getSpanId()
+    /**
+     * @return string
+     */
+    public function getSpanId(): string
     {
         return $this->spanId;
     }
@@ -294,4 +303,22 @@ class Span implements SpanContext
         return $this->remote;
     }
 
+    /**
+     * return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->getName(),
+            'traceId' => $this->getTraceId(),
+            'parents' =>  $this->getParents(),
+            'remote' =>  $this->getRemote(),
+            'exportable' => $this->isExportable(),
+            'processId' => $this->getProcessId(),
+            'savedSpan' => $this->getSavedSpan(),
+            'tags' => $this->getTags(),
+            'logs' => $this->getLogs(),
+            'baggage' => $this->getBaggage()
+        ];
+    }
 }

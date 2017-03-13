@@ -2,7 +2,6 @@
 
 namespace Sleuth\Core\Sampler;
 
-use Sleuth\Core\Sampler\IsTracingSampler;
 use Sleuth\Core\Span;
 use Sleuth\Core\SpanAccessor;
 
@@ -28,9 +27,10 @@ class IsTracingSamplerTest extends \PHPUnit_Framework_TestCase
 
     private function settingTracingSampler(bool $value) : IsTracingSampler
     {
-        $spanAccessorMock = \Mockery::mock(SpanAccessor::class);
-        $spanAccessorMock->shouldReceive('isTracing')->once()->andReturn($value);
+        $spanAccessorMock = $this->getMockBuilder(SpanAccessor::class)->getMock();
+        $spanAccessorMock->method('isTracing')->willReturn($value);
 
         return new IsTracingSampler($spanAccessorMock);
     }
+
 }

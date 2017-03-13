@@ -16,9 +16,9 @@ class AtomicIntegerException extends \Exception
 final class AtomicInteger
 {
     /**
-     * @var int
+     * @var boolean
      */
-    private $lock = 0;
+    private $lock = false;
 
     /**
      * @var int
@@ -45,7 +45,7 @@ final class AtomicInteger
 
     public function __clone()
     {
-        throw new \InvalidArgumentException("not clone");
+        throw new AtomicIntegerException("object cannot be cloned");
     }
 
     /**
@@ -58,6 +58,8 @@ final class AtomicInteger
         if ($expect === $this->get()) {
             $this->set($update);
         }
+
+        return true;
     }
 
     public function set(int $newValue)
@@ -66,7 +68,7 @@ final class AtomicInteger
             throw new AtomicIntegerException("number is locked");
         }
         $this->lock();
-        $this->set($newValue);
+        $this->value = $newValue;
         $this->unlock();
     }
 

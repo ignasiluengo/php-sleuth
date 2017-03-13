@@ -26,11 +26,6 @@ class SpanBuilder
     /**
      * @var string
      */
-    private $traceIdHigh;
-
-    /**
-     * @var string
-     */
     private $traceId;
 
     /**
@@ -79,19 +74,11 @@ class SpanBuilder
     private $baggage = [];
 
     /**
-     * SpanBuilder constructor.
+     * @return Span
      */
-    private function __construct()
+    public function build(): Span
     {
-
-    }
-
-    /**
-     * @return SpanBuilder
-     */
-    public static function build(): SpanBuilder
-    {
-        return new self();
+        return Span::create()->makeFromBuilder($this);
     }
 
     /**
@@ -145,24 +132,6 @@ class SpanBuilder
     public function setName(string $name): SpanBuilder
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTraceIdHigh(): string
-    {
-        return $this->traceIdHigh;
-    }
-
-    /**
-     * @param string $traceIdHigh
-     * @return SpanBuilder
-     */
-    public function setTraceIdHigh(string $traceIdHigh): SpanBuilder
-    {
-        $this->traceIdHigh = $traceIdHigh;
         return $this;
     }
 
@@ -275,9 +244,9 @@ class SpanBuilder
     }
 
     /**
-     * @return Span
+     * @return null|Span
      */
-    public function getSavedSpan(): Span
+    public function getSavedSpan()
     {
         return $this->savedSpan;
     }
@@ -313,6 +282,7 @@ class SpanBuilder
     public function addLog($log) : SpanBuilder
     {
         $this->logs[] = $log;
+        return $this;
     }
 
     /**
